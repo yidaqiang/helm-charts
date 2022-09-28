@@ -1,0 +1,159 @@
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: hedgedoc
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.hedgedoc.replicaCount }}
+  {{- if .Values.hedgedoc.updateStrategy }}
+  strategy: {{- toYaml .Values.hedgedoc.updateStrategy | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: hedgedoc
+  template:
+    metadata:
+      {{- if .Values.hedgedoc.podAnnotations }}
+      annotations: {{- include "common.tplvalues.render" (dict "value" .Values.hedgedoc.podAnnotations "context" $) | nindent 8 }}
+      {{- end }}
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: hedgedoc
+        {{- if .Values.hedgedoc.podLabels }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.hedgedoc.podLabels "context" $) | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ template "hedgedoc.serviceAccountName" . }}
+      {{- include "hedgedoc.imagePullSecrets" . | nindent 6 -}}
+      {{- if .Values.hedgedoc.hostAliases -}}
+      hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.hedgedoc.hostAliases "context" $) | nindent 8 }}
+      {{- end -}}
+      {{- if .Values.hedgedoc.affinity -}}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.hedgedoc.affinity "context" $) | nindent 8 }}
+      {{- else }}
+      affinity:
+        podAffinity: {{- include "common.affinities.pods" (dict "type" .Values.hedgedoc.podAffinityPreset "component" "hedgedoc" "context" $) | nindent 10 }}
+        podAntiAffinity: {{- include "common.affinities.pods" (dict "type" .Values.hedgedoc.podAntiAffinityPreset "component" "hedgedoc" "context" $) | nindent 10 }}
+        nodeAffinity: {{- include "common.affinities.nodes" (dict "type" .Values.hedgedoc.nodeAffinityPreset.type "key" .Values.hedgedoc.nodeAffinityPreset.key "values" .Values.hedgedoc.nodeAffinityPreset.values) | nindent 10 }}
+      {{- end }}
+      {{- if .Values.hedgedoc.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.hedgedoc.nodeSelector "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.hedgedoc.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.hedgedoc.tolerations "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.hedgedoc.priorityClassName }}
+      priorityClassName: {{ .Values.hedgedoc.priorityClassName | quote }}
+      {{- end }}
+      {{- if .Values.hedgedoc.schedulerName }}
+      schedulerName: {{ .Values.hedgedoc.schedulerName | quote }}
+      {{- end }}
+      {{- if .Values.hedgedoc.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.hedgedoc.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
+      initContainers:
+        {{- if .Values.volumePermissions.enabled }}
+        - name: volume-permissions
+          image: {{ include "hedgedoc.volumePermissions.image" . }}
+          imagePullPolicy: {{ .Values.volumePermissions.image.pullPolicy | quote }}
+          #command:
+          #  - %%commands%%
+          securityContext: {{- include "common.tplvalues.render" (dict "value" .Values.volumePermissions.containerSecurityContext "context" $) | nindent 12 }}
+          {{- if .Values.volumePermissions.resources }}
+          resources: {{- toYaml .Values.volumePermissions.resources | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: uploads
+              mountPath: {{ .Values.persistence.mountPath }}
+        {{- end }}
+        {{- if .Values.hedgedoc.initContainers }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.hedgedoc.initContainers "context" $) | nindent 8 }}
+        {{- end }}
+      containers:
+        - name: hedgedoc
+          image: {{ template "hedgedoc.image" . }}
+          imagePullPolicy: {{ .Values.hedgedoc.image.pullPolicy }}
+          {{- if .Values.hedgedoc.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.hedgedoc.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          {{- if .Values.diagnosticMode.enabled }}
+          command: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.command "context" $) | nindent 12 }}
+          {{- else if .Values.hedgedoc.command }}
+          command: {{- include "common.tplvalues.render" (dict "value" .Values.hedgedoc.command "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.diagnosticMode.enabled }}
+          args: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.args "context" $) | nindent 12 }}
+          {{- else if .Values.hedgedoc.args }}
+          args: {{- include "common.tplvalues.render" (dict "value" .Values.hedgedoc.args "context" $) | nindent 12 }}
+          {{- end }}
+          env:
+            - name: foo
+              value: bar
+            {{- if .Values.hedgedoc.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.hedgedoc.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          {{- if .Values.hedgedoc.resources }}
+          resources: {{- toYaml .Values.hedgedoc.resources | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.hedgedoc.containerPorts.http }}
+          {{- if not .Values.diagnosticMode.enabled }}
+          {{- if .Values.hedgedoc.livenessProbe.enabled }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.hedgedoc.livenessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+          {{- else if .Values.hedgedoc.customLivenessProbe }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.hedgedoc.customLivenessProbe "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.hedgedoc.readinessProbe.enabled }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.hedgedoc.readinessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+          {{- else if .Values.hedgedoc.customReadinessProbe }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.hedgedoc.customReadinessProbe "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.hedgedoc.startupProbe.enabled }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.hedgedoc.startupProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+          {{- else if .Values.hedgedoc.customStartupProbe }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.hedgedoc.customStartupProbe "context" $) | nindent 12 }}
+          {{- end }}
+          {{- end }}
+          {{- if .Values.hedgedoc.lifecycleHooks }}
+          lifecycle: {{- include "common.tplvalues.render" (dict "value" .Values.hedgedoc.lifecycleHooks "context" $) | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: uploads
+              mountPath: {{ .Values.persistence.mountPath }}
+          {{- if .Values.hedgedoc.extraVolumeMounts }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.hedgedoc.extraVolumeMounts "context" $) | nindent 12 }}
+          {{- end }}
+        {{- if .Values.hedgedoc.sidecars }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.hedgedoc.sidecars "context" $) | nindent 8 }}
+        {{- end }}
+      volumes:
+        - name: uploads
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "hedgedoc.claimName" . }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        {{- if .Values.hedgedoc.extraVolumes }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.hedgedoc.extraVolumes "context" $) | nindent 8 }}
+        {{- end }}
