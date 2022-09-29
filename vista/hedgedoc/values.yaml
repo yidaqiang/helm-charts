@@ -55,257 +55,252 @@ diagnosticMode:
   args:
     - infinity
 
-## @section %%MAIN_CONTAINER%% Parameters
-
-## %%MAIN_CONTAINER/POD_DESCRIPTION%%
+## Bitnami %%MAIN_CONTAINER%% image
+## ref: https://hub.docker.com/r/bitnami/hedgedoc/tags/
+## @param hedgedoc.image.registry %%MAIN_CONTAINER%% image registry
+## @param hedgedoc.image.repository %%MAIN_CONTAINER%% image repository
+## @param hedgedoc.image.tag %%MAIN_CONTAINER%% image tag (immutable tags are recommended)
+## @param hedgedoc.image.pullPolicy %%MAIN_CONTAINER%% image pull policy
+## @param hedgedoc.image.pullSecrets %%MAIN_CONTAINER%% image pull secrets
+## @param hedgedoc.image.debug Enable %%MAIN_CONTAINER%% image debug mode
 ##
-hedgedoc:
-  ## Bitnami %%MAIN_CONTAINER%% image
-  ## ref: https://hub.docker.com/r/bitnami/hedgedoc/tags/
-  ## @param hedgedoc.image.registry %%MAIN_CONTAINER%% image registry
-  ## @param hedgedoc.image.repository %%MAIN_CONTAINER%% image repository
-  ## @param hedgedoc.image.tag %%MAIN_CONTAINER%% image tag (immutable tags are recommended)
-  ## @param hedgedoc.image.pullPolicy %%MAIN_CONTAINER%% image pull policy
-  ## @param hedgedoc.image.pullSecrets %%MAIN_CONTAINER%% image pull secrets
-  ## @param hedgedoc.image.debug Enable %%MAIN_CONTAINER%% image debug mode
+image:
+  registry: quay.io
+  repository: hedgedoc/hedgedoc
+  tag: 1.9.4
+  ## Specify a imagePullPolicy
+  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
-  image:
-    registry: quay.io
-    repository: hedgedoc/hedgedoc
-    tag: 1.9.4
-    ## Specify a imagePullPolicy
-    ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
-    ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
-    ##
-    pullPolicy: IfNotPresent
-    ## Optionally specify an array of imagePullSecrets.
-    ## Secrets must be manually created in the namespace.
-    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-    ## e.g:
-    ## pullSecrets:
-    ##   - myRegistryKeySecretName
-    ##
-    pullSecrets: []
-    ## Enable debug mode
-    ##
-    debug: false
-  ## @param hedgedoc.replicaCount Number of %%MAIN_CONTAINER_NAME%% replicas to deploy
-  ##
-  replicaCount: 1
-  ## @param hedgedoc.containerPorts.http %%MAIN_CONTAINER_NAME%% HTTP container port
-  ## @param hedgedoc.containerPorts.https %%MAIN_CONTAINER_NAME%% HTTPS container port
-  ##
-  containerPorts:
-    http: 80
-  ## Configure extra options for %%MAIN_CONTAINER_NAME%% containers' liveness and readiness probes
-  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
-  ## @param hedgedoc.livenessProbe.enabled Enable livenessProbe on %%MAIN_CONTAINER_NAME%% containers
-  ## @param hedgedoc.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
-  ## @param hedgedoc.livenessProbe.periodSeconds Period seconds for livenessProbe
-  ## @param hedgedoc.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
-  ## @param hedgedoc.livenessProbe.failureThreshold Failure threshold for livenessProbe
-  ## @param hedgedoc.livenessProbe.successThreshold Success threshold for livenessProbe
-  ##
-  livenessProbe:
-    enabled: true
-    initialDelaySeconds: 5
-    periodSeconds: 5
-    timeoutSeconds: 5
-    successThreshold: 1
-    failureThreshold: 5
-  ## @param hedgedoc.readinessProbe.enabled Enable readinessProbe on %%MAIN_CONTAINER_NAME%% containers
-  ## @param hedgedoc.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
-  ## @param hedgedoc.readinessProbe.periodSeconds Period seconds for readinessProbe
-  ## @param hedgedoc.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
-  ## @param hedgedoc.readinessProbe.failureThreshold Failure threshold for readinessProbe
-  ## @param hedgedoc.readinessProbe.successThreshold Success threshold for readinessProbe
-  ##
-  readinessProbe:
-    enabled: true
-    initialDelaySeconds: 5
-    periodSeconds: 5
-    timeoutSeconds: 1
-    successThreshold: 1
-    failureThreshold: 5
-
-  ## @param hedgedoc.startupProbe.enabled Enable startupProbe on %%MAIN_CONTAINER_NAME%% containers
-  ## @param hedgedoc.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
-  ## @param hedgedoc.startupProbe.periodSeconds Period seconds for startupProbe
-  ## @param hedgedoc.startupProbe.timeoutSeconds Timeout seconds for startupProbe
-  ## @param hedgedoc.startupProbe.failureThreshold Failure threshold for startupProbe
-  ## @param hedgedoc.startupProbe.successThreshold Success threshold for startupProbe
-  ##
-  startupProbe:
-    enabled: false
-    initialDelaySeconds: 0
-    periodSeconds: 10
-    timeoutSeconds: 5
-    successThreshold: 1
-    failureThreshold: 60
-  ## @param hedgedoc.customLivenessProbe Custom livenessProbe that overrides the default one
-  ##
-  customLivenessProbe: {}
-  ## @param hedgedoc.customReadinessProbe Custom readinessProbe that overrides the default one
-  ##
-  customReadinessProbe: {}
-  ## @param hedgedoc.customStartupProbe Custom startupProbe that overrides the default one
-  ##
-  customStartupProbe: {}
-  ## %%MAIN_CONTAINER_NAME%% resource requests and limits
-  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
-  ## @param hedgedoc.resources.limits The resources limits for the %%MAIN_CONTAINER_NAME%% containers
-  ## @param hedgedoc.resources.requests The requested resources for the %%MAIN_CONTAINER_NAME%% containers
-  ##
-  resources:
-    limits: {}
-    requests: {}
-  ## Configure Pods Security Context
-  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
-  ## @param hedgedoc.podSecurityContext.enabled Enabled %%MAIN_CONTAINER_NAME%% pods' Security Context
-  ## @param hedgedoc.podSecurityContext.fsGroup Set %%MAIN_CONTAINER_NAME%% pod's Security Context fsGroup
-  ##
-  podSecurityContext:
-    enabled: true
-    fsGroup: 10000
-  ## Configure Container Security Context
-  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
-  ## @param hedgedoc.containerSecurityContext.enabled Enabled %%MAIN_CONTAINER_NAME%% containers' Security Context
-  ## @param hedgedoc.containerSecurityContext.runAsUser Set %%MAIN_CONTAINER_NAME%% containers' Security Context runAsUser
-  ## @param hedgedoc.containerSecurityContext.runAsNonRoot Set %%MAIN_CONTAINER_NAME%% containers' Security Context runAsNonRoot
-  ##
-  containerSecurityContext:
-    enabled: true
-    runAsUser: 10000
-    runAsNonRoot: true
-
-  ## @param hedgedoc.existingConfigmap The name of an existing ConfigMap with your custom configuration for %%MAIN_CONTAINER_NAME%%
-  ##
-  existingConfigmap:
-  ## @param hedgedoc.command Override default container command (useful when using custom images)
-  ##
-  command: []
-  ## @param hedgedoc.args Override default container args (useful when using custom images)
-  ##
-  args: []
-  ## @param hedgedoc.hostAliases %%MAIN_CONTAINER_NAME%% pods host aliases
-  ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
-  ##
-  hostAliases: []
-  ## @param hedgedoc.podLabels Extra labels for %%MAIN_CONTAINER_NAME%% pods
-  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-  ##
-  podLabels: {}
-  ## @param hedgedoc.podAnnotations Annotations for %%MAIN_CONTAINER_NAME%% pods
-  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-  ##
-  podAnnotations: {}
-  ## @param hedgedoc.podAffinityPreset Pod affinity preset. Ignored if `hedgedoc.affinity` is set. Allowed values: `soft` or `hard`
-  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
-  ##
-  podAffinityPreset: ""
-  ## @param hedgedoc.podAntiAffinityPreset Pod anti-affinity preset. Ignored if `hedgedoc.affinity` is set. Allowed values: `soft` or `hard`
-  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
-  ##
-  podAntiAffinityPreset: soft
-  ## Node hedgedoc.affinity preset
-  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
-  ##
-  nodeAffinityPreset:
-    ## @param hedgedoc.nodeAffinityPreset.type Node affinity preset type. Ignored if `hedgedoc.affinity` is set. Allowed values: `soft` or `hard`
-    ##
-    type: ""
-    ## @param hedgedoc.nodeAffinityPreset.key Node label key to match. Ignored if `hedgedoc.affinity` is set
-    ##
-    key: ""
-    ## @param hedgedoc.nodeAffinityPreset.values Node label values to match. Ignored if `hedgedoc.affinity` is set
-    ## E.g.
-    ## values:
-    ##   - e2e-az1
-    ##   - e2e-az2
-    ##
-    values: []
-  ## @param hedgedoc.affinity Affinity for %%MAIN_CONTAINER_NAME%% pods assignment
-  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-  ## NOTE: `hedgedoc.podAffinityPreset`, `hedgedoc.podAntiAffinityPreset`, and `hedgedoc.nodeAffinityPreset` will be ignored when it's set
-  ##
-  affinity: {}
-  ## @param hedgedoc.nodeSelector Node labels for %%MAIN_CONTAINER_NAME%% pods assignment
-  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
-  ##
-  nodeSelector: {}
-  ## @param hedgedoc.tolerations Tolerations for %%MAIN_CONTAINER_NAME%% pods assignment
-  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-  ##
-  tolerations: []
-  ## @param hedgedoc.updateStrategy.type %%MAIN_CONTAINER_NAME%% statefulset strategy type
-  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
-  ##
-  updateStrategy:
-    ## StrategyType
-    ## Can be set to RollingUpdate or OnDelete
-    ##
-    type: RollingUpdate
-  ## @param hedgedoc.priorityClassName %%MAIN_CONTAINER_NAME%% pods' priorityClassName
-  ##
-  priorityClassName: ""
-  ## @param hedgedoc.schedulerName Name of the k8s scheduler (other than default) for %%MAIN_CONTAINER_NAME%% pods
-  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
-  ##
-  schedulerName: ""
-  ## @param hedgedoc.lifecycleHooks for the %%MAIN_CONTAINER_NAME%% container(s) to automate configuration before or after startup
-  ##
-  lifecycleHooks: {}
-  ## @param hedgedoc.extraEnvVars Array with extra environment variables to add to %%MAIN_CONTAINER_NAME%% nodes
+  pullPolicy: IfNotPresent
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
   ## e.g:
-  ## extraEnvVars:
-  ##   - name: FOO
-  ##     value: "bar"
+  ## pullSecrets:
+  ##   - myRegistryKeySecretName
   ##
-  extraEnvVars:
-    - name: CMD_DB_URL
-      value: postgres://hedgedoc:password@database:5432/hedgedoc
-    - name: CMD_DOMAIN
-      value: localhost
-    - name: CMD_URL_ADDPORT
-      value: "true"
-    - name: CMD_PORT
-      value: 80
-    - name: CMD_PROTOCOL_USESSL
-      value: "false"
+  pullSecrets: []
+  ## Enable debug mode
+  ##
+  debug: false
+## @param hedgedoc.replicaCount Number of %%MAIN_CONTAINER_NAME%% replicas to deploy
+##
+replicaCount: 1
+## @param hedgedoc.containerPorts.http %%MAIN_CONTAINER_NAME%% HTTP container port
+## @param hedgedoc.containerPorts.https %%MAIN_CONTAINER_NAME%% HTTPS container port
+##
+containerPorts:
+  http: 80
+## Configure extra options for %%MAIN_CONTAINER_NAME%% containers' liveness and readiness probes
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+## @param hedgedoc.livenessProbe.enabled Enable livenessProbe on %%MAIN_CONTAINER_NAME%% containers
+## @param hedgedoc.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+## @param hedgedoc.livenessProbe.periodSeconds Period seconds for livenessProbe
+## @param hedgedoc.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+## @param hedgedoc.livenessProbe.failureThreshold Failure threshold for livenessProbe
+## @param hedgedoc.livenessProbe.successThreshold Success threshold for livenessProbe
+##
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 5
+## @param hedgedoc.readinessProbe.enabled Enable readinessProbe on %%MAIN_CONTAINER_NAME%% containers
+## @param hedgedoc.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+## @param hedgedoc.readinessProbe.periodSeconds Period seconds for readinessProbe
+## @param hedgedoc.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+## @param hedgedoc.readinessProbe.failureThreshold Failure threshold for readinessProbe
+## @param hedgedoc.readinessProbe.successThreshold Success threshold for readinessProbe
+##
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 1
+  successThreshold: 1
+  failureThreshold: 5
 
-  ## @param hedgedoc.extraEnvVarsCM Name of existing ConfigMap containing extra env vars for %%MAIN_CONTAINER_NAME%% nodes
+## @param hedgedoc.startupProbe.enabled Enable startupProbe on %%MAIN_CONTAINER_NAME%% containers
+## @param hedgedoc.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+## @param hedgedoc.startupProbe.periodSeconds Period seconds for startupProbe
+## @param hedgedoc.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+## @param hedgedoc.startupProbe.failureThreshold Failure threshold for startupProbe
+## @param hedgedoc.startupProbe.successThreshold Success threshold for startupProbe
+##
+startupProbe:
+  enabled: false
+  initialDelaySeconds: 0
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 60
+## @param hedgedoc.customLivenessProbe Custom livenessProbe that overrides the default one
+##
+customLivenessProbe: {}
+## @param hedgedoc.customReadinessProbe Custom readinessProbe that overrides the default one
+##
+customReadinessProbe: {}
+## @param hedgedoc.customStartupProbe Custom startupProbe that overrides the default one
+##
+customStartupProbe: {}
+## %%MAIN_CONTAINER_NAME%% resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+## @param hedgedoc.resources.limits The resources limits for the %%MAIN_CONTAINER_NAME%% containers
+## @param hedgedoc.resources.requests The requested resources for the %%MAIN_CONTAINER_NAME%% containers
+##
+resources:
+  limits: {}
+  requests: {}
+## Configure Pods Security Context
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+## @param hedgedoc.podSecurityContext.enabled Enabled %%MAIN_CONTAINER_NAME%% pods' Security Context
+## @param hedgedoc.podSecurityContext.fsGroup Set %%MAIN_CONTAINER_NAME%% pod's Security Context fsGroup
+##
+podSecurityContext:
+  enabled: true
+  fsGroup: 10000
+## Configure Container Security Context
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+## @param hedgedoc.containerSecurityContext.enabled Enabled %%MAIN_CONTAINER_NAME%% containers' Security Context
+## @param hedgedoc.containerSecurityContext.runAsUser Set %%MAIN_CONTAINER_NAME%% containers' Security Context runAsUser
+## @param hedgedoc.containerSecurityContext.runAsNonRoot Set %%MAIN_CONTAINER_NAME%% containers' Security Context runAsNonRoot
+##
+containerSecurityContext:
+  enabled: true
+  runAsUser: 10000
+  runAsNonRoot: true
+
+## @param hedgedoc.existingConfigmap The name of an existing ConfigMap with your custom configuration for %%MAIN_CONTAINER_NAME%%
+##
+existingConfigmap:
+## @param hedgedoc.command Override default container command (useful when using custom images)
+##
+command: []
+## @param hedgedoc.args Override default container args (useful when using custom images)
+##
+args: []
+## @param hedgedoc.hostAliases %%MAIN_CONTAINER_NAME%% pods host aliases
+## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+##
+hostAliases: []
+## @param hedgedoc.podLabels Extra labels for %%MAIN_CONTAINER_NAME%% pods
+## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+##
+podLabels: {}
+## @param hedgedoc.podAnnotations Annotations for %%MAIN_CONTAINER_NAME%% pods
+## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+##
+podAnnotations: {}
+## @param hedgedoc.podAffinityPreset Pod affinity preset. Ignored if `hedgedoc.affinity` is set. Allowed values: `soft` or `hard`
+## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
+##
+podAffinityPreset: ""
+## @param hedgedoc.podAntiAffinityPreset Pod anti-affinity preset. Ignored if `hedgedoc.affinity` is set. Allowed values: `soft` or `hard`
+## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
+##
+podAntiAffinityPreset: soft
+## Node hedgedoc.affinity preset
+## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
+##
+nodeAffinityPreset:
+  ## @param hedgedoc.nodeAffinityPreset.type Node affinity preset type. Ignored if `hedgedoc.affinity` is set. Allowed values: `soft` or `hard`
   ##
-  extraEnvVarsCM:
-  ## @param hedgedoc.extraEnvVarsSecret Name of existing Secret containing extra env vars for %%MAIN_CONTAINER_NAME%% nodes
+  type: ""
+  ## @param hedgedoc.nodeAffinityPreset.key Node label key to match. Ignored if `hedgedoc.affinity` is set
   ##
-  extraEnvVarsSecret:
-  ## @param hedgedoc.extraVolumes Optionally specify extra list of additional volumes for the %%MAIN_CONTAINER_NAME%% pod(s)
+  key: ""
+  ## @param hedgedoc.nodeAffinityPreset.values Node label values to match. Ignored if `hedgedoc.affinity` is set
+  ## E.g.
+  ## values:
+  ##   - e2e-az1
+  ##   - e2e-az2
   ##
-  extraVolumes: []
-  ## @param hedgedoc.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the %%MAIN_CONTAINER_NAME%% container(s)
+  values: []
+## @param hedgedoc.affinity Affinity for %%MAIN_CONTAINER_NAME%% pods assignment
+## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+## NOTE: `hedgedoc.podAffinityPreset`, `hedgedoc.podAntiAffinityPreset`, and `hedgedoc.nodeAffinityPreset` will be ignored when it's set
+##
+affinity: {}
+## @param hedgedoc.nodeSelector Node labels for %%MAIN_CONTAINER_NAME%% pods assignment
+## ref: https://kubernetes.io/docs/user-guide/node-selection/
+##
+nodeSelector: {}
+## @param hedgedoc.tolerations Tolerations for %%MAIN_CONTAINER_NAME%% pods assignment
+## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+##
+tolerations: []
+## @param hedgedoc.updateStrategy.type %%MAIN_CONTAINER_NAME%% statefulset strategy type
+## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
+##
+updateStrategy:
+  ## StrategyType
+  ## Can be set to RollingUpdate or OnDelete
   ##
-  extraVolumeMounts: []
-  ## @param hedgedoc.sidecars Add additional sidecar containers to the %%MAIN_CONTAINER_NAME%% pod(s)
-  ## e.g:
-  ## sidecars:
-  ##   - name: your-image-name
-  ##     image: your-image
-  ##     imagePullPolicy: Always
-  ##     ports:
-  ##       - name: portname
-  ##         containerPort: 1234
-  ##
-  sidecars: {}
-  ## @param hedgedoc.initContainers Add additional init containers to the %%MAIN_CONTAINER_NAME%% pod(s)
-  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
-  ## e.g:
-  ## initContainers:
-  ##  - name: your-image-name
-  ##    image: your-image
-  ##    imagePullPolicy: Always
-  ##    command: ['sh', '-c', 'echo "hello world"']
-  ##
-  initContainers: {}
+  type: RollingUpdate
+## @param hedgedoc.priorityClassName %%MAIN_CONTAINER_NAME%% pods' priorityClassName
+##
+priorityClassName: ""
+## @param hedgedoc.schedulerName Name of the k8s scheduler (other than default) for %%MAIN_CONTAINER_NAME%% pods
+## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+##
+schedulerName: ""
+## @param hedgedoc.lifecycleHooks for the %%MAIN_CONTAINER_NAME%% container(s) to automate configuration before or after startup
+##
+lifecycleHooks: {}
+## @param hedgedoc.extraEnvVars Array with extra environment variables to add to %%MAIN_CONTAINER_NAME%% nodes
+## e.g:
+## extraEnvVars:
+##   - name: FOO
+##     value: "bar"
+##
+extraEnvVars:
+  - name: CMD_DB_URL
+    value: postgres://hedgedoc:password@database:5432/hedgedoc
+  - name: CMD_DOMAIN
+    value: localhost
+  - name: CMD_URL_ADDPORT
+    value: "true"
+  - name: CMD_PORT
+    value: 80
+  - name: CMD_PROTOCOL_USESSL
+    value: "false"
+
+## @param hedgedoc.extraEnvVarsCM Name of existing ConfigMap containing extra env vars for %%MAIN_CONTAINER_NAME%% nodes
+##
+extraEnvVarsCM:
+## @param hedgedoc.extraEnvVarsSecret Name of existing Secret containing extra env vars for %%MAIN_CONTAINER_NAME%% nodes
+##
+extraEnvVarsSecret:
+## @param hedgedoc.extraVolumes Optionally specify extra list of additional volumes for the %%MAIN_CONTAINER_NAME%% pod(s)
+##
+extraVolumes: []
+## @param hedgedoc.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the %%MAIN_CONTAINER_NAME%% container(s)
+##
+extraVolumeMounts: []
+## @param hedgedoc.sidecars Add additional sidecar containers to the %%MAIN_CONTAINER_NAME%% pod(s)
+## e.g:
+## sidecars:
+##   - name: your-image-name
+##     image: your-image
+##     imagePullPolicy: Always
+##     ports:
+##       - name: portname
+##         containerPort: 1234
+##
+sidecars: {}
+## @param hedgedoc.initContainers Add additional init containers to the %%MAIN_CONTAINER_NAME%% pod(s)
+## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+## e.g:
+## initContainers:
+##  - name: your-image-name
+##    image: your-image
+##    imagePullPolicy: Always
+##    command: ['sh', '-c', 'echo "hello world"']
+##
+initContainers: {}
 
 ## @section Traffic Exposure Parameters
 

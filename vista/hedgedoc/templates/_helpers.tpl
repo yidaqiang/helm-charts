@@ -2,7 +2,7 @@
 Return the proper hedgedoc image name
 */}}
 {{- define "hedgedoc.image" -}}
-{{ include "common.images.image" (dict "imageRoot" .Values.hedgedoc.image "global" .Values.global) }}
+{{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
 {{- end -}}
 
 {{/*
@@ -16,7 +16,7 @@ Return the proper image name (for the init container volume-permissions image)
 Return the proper Docker Image Registry Secret Names
 */}}
 {{- define "hedgedoc.imagePullSecrets" -}}
-{{- include "common.images.pullSecrets" (dict "images" (list .Values.hedgedoc.image .Values.volumePermissions.image) "global" .Values.global) -}}
+{{- include "common.images.pullSecrets" (dict "images" (list .Values.image .Values.volumePermissions.image) "global" .Values.global) -}}
 {{- end -}}
 
 {{/*

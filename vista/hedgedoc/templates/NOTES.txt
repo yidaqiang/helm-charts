@@ -28,4 +28,4 @@ Instructions to access the application depending on the serviceType and other co
 
 {{- end }}
 
-{{- include "common.warnings.rollingTag" .Values.hedgedoc.image }}
+{{- include "common.warnings.rollingTag" .Values.image }}
