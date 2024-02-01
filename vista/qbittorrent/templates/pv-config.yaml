@@ -1,0 +1,27 @@
+{{- /*
+Copyright Vista Yih.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
+{{- if and .Values.persistence.config.enabled .Values.persistence.config.hostPath (not .Values.persistence.config.existingClaim) -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "common.names.fullname" . }}-config
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if not (empty .Values.persistence.config.accessModes) }}
+  accessModes:
+  {{- range .Values.persistence.config.accessModes }}
+    - {{ . | quote }}
+  {{- end }}
+  {{- end }}
+  capacity:
+    storage: {{ .Values.persistence.config.size | quote }}
+  hostPath:
+    path: {{ .Values.persistence.config.hostPath | quote }}
+{{- end -}}

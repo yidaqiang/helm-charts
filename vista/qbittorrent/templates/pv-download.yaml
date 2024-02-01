@@ -1,0 +1,27 @@
+{{- /*
+Copyright Vista Yih.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
+{{- if and .Values.persistence.download.enabled .Values.persistence.download.hostPath (not .Values.persistence.download.existingClaim) -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "common.names.fullname" . }}-download
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if not (empty .Values.persistence.download.accessModes) }}
+  accessModes:
+  {{- range .Values.persistence.download.accessModes }}
+    - {{ . | quote }}
+  {{- end }}
+  {{- end }}
+  capacity:
+    storage: {{ .Values.persistence.download.size | quote }}
+  hostPath:
+    path: {{ .Values.persistence.download.hostPath | quote }}
+{{- end -}}

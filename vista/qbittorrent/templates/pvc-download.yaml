@@ -1,0 +1,38 @@
+{{- /*
+Copyright Vista Yih.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
+{{- if and .Values.persistence.download.enabled (not .Values.persistence.download.existingClaim) -}}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "common.names.fullname" . }}-download
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if or .Values.persistence.download.annotations .Values.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.persistence.download.annotations .Values.commonAnnotations ) "context" . ) }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.persistence.download.hostPath }}
+  storageClassName: ""
+  {{- else }}
+  {{- include "qbittorrent.storageClass" . | nindent 2 }}
+  {{- end }}
+  {{- if not (empty .Values.persistence.download.accessModes) }}
+  accessModes:
+  {{- range .Values.persistence.download.accessModes }}
+    - {{ . | quote }}
+  {{- end }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.download.size | quote }}
+  {{- if .Values.persistence.download.selector }}
+  selector: {{- include "common.tplvalues.render" (dict "value" .Values.persistence.download.selector "context" $) | nindent 4 }}
+  {{- end -}}
+  {{- if .Values.persistence.download.dataSource }}
+  dataSource: {{- include "common.tplvalues.render" (dict "value" .Values.persistence.download.dataSource "context" $) | nindent 4 }}
+  {{- end }}
+{{- end -}}
