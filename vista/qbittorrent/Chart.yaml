@@ -13,7 +13,7 @@ apiVersion: v2
 appVersion: 4.6.3
 dependencies:
 - name: common
-  repository: https://yidaqiang.github.io/helm-charts
+  repository: https://charts.bitnami.com/bitnami
   tags:
   - vista-common
   version: 2.x.x
