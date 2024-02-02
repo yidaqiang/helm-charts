@@ -17,7 +17,7 @@ dependencies:
   tags:
   - vista-common
   version: 2.x.x
-description: ClickHouse is an open-source column-oriented OLAP database management system. Use it to boost your database performance while providing linear scalability and hardware efficiency.
+description: qBittorrent is a cross-platform free and open-source BitTorrent client
 home: https://github.com/yidaqiang/helm-charts
 icon: https://www.qbittorrent.org/favicon.ico
 keywords:
