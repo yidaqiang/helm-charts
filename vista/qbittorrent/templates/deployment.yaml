@@ -29,7 +29,11 @@ spec:
     spec:
       {{- include "qbittorrent.imagePullSecrets" . | nindent 6 }}
       serviceAccountName: {{ include "qbittorrent.serviceAccountName" . }}
-
+      {{- /* 
+      {{- if .Values.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
+      */}}
       {{- if .Values.affinity }}
       affinity: {{- include "common.tplvalues.render" (dict "value" .Values.affinity "context" $) | nindent 8 }}
       {{- else }}
