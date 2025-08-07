@@ -3,6 +3,16 @@ entries:
   calibre-web:
   - apiVersion: v2
     appVersion: 0.6.24
+    created: "2025-08-07T16:06:38.962416397Z"
+    description: A Helm chart for Kubernetes
+    digest: 0d639a2b42217f40f48f2da2bcb1f814d95ea60a80804a908ef159304ae89978
+    name: calibre-web
+    type: application
+    urls:
+    - https://github.com/yidaqiang/helm-charts/releases/download/calibre-web-0.1.2/calibre-web-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 0.6.24
     created: "2025-08-07T15:42:04.598513585Z"
     description: A Helm chart for Kubernetes
     digest: 08aa8ec7775c4dc28ea06f11d14b2a2f712706414ba966efb556bcc4e4301860
@@ -113,4 +123,4 @@ entries:
     urls:
     - https://github.com/yidaqiang/helm-charts/releases/download/qbittorrent-0.1.0/qbittorrent-0.1.0.tgz
     version: 0.1.0
-generated: "2025-08-07T15:42:05.021679868Z"
+generated: "2025-08-07T16:06:38.962434592Z"
